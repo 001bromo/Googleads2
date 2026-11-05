@@ -339,7 +339,7 @@
   <div class="video-grid">
 
     <!-- Card 1 -->
-    <div class="video-card" onclick="playSelectedVideo(event, 'https://files.catbox.moe/f2lhl3.mp4')">
+    <div class="video-card" onclick="handleVideoClick(event, 'https://files.catbox.moe/f2lhl3.mp4')">
       <div class="thumb-wrapper">
         <video muted loop playsinline preload="metadata" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;">
           <source src="https://files.catbox.moe/f2lhl3.mp4" type="video/mp4">
@@ -354,7 +354,7 @@
     </div>
 
     <!-- Card 2 -->
-    <div class="video-card" onclick="playSelectedVideo(event, 'https://files.catbox.moe/sux7ry.mp4')">
+    <div class="video-card" onclick="handleVideoClick(event, 'https://files.catbox.moe/sux7ry.mp4')">
       <div class="thumb-wrapper">
         <video muted loop playsinline preload="metadata" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;">
           <source src="https://files.catbox.moe/sux7ry.mp4" type="video/mp4">
@@ -369,7 +369,7 @@
     </div>
 
     <!-- Card 3 -->
-    <div class="video-card" onclick="playSelectedVideo(event, 'https://files.catbox.moe/uu7uhb.mp4')">
+    <div class="video-card" onclick="handleVideoClick(event, 'https://files.catbox.moe/uu7uhb.mp4')">
       <div class="thumb-wrapper">
         <video muted loop playsinline preload="metadata" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;">
           <source src="https://files.catbox.moe/uu7uhb.mp4" type="video/mp4">
@@ -384,7 +384,7 @@
     </div>
 
     <!-- Card 4 -->
-    <div class="video-card" onclick="playSelectedVideo(event, 'https://files.catbox.moe/yv571n.mp4')">
+    <div class="video-card" onclick="handleVideoClick(event, 'https://files.catbox.moe/yv571n.mp4')">
       <div class="thumb-wrapper">
         <video muted loop playsinline preload="metadata" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;">
           <source src="https://files.catbox.moe/yv571n.mp4" type="video/mp4">
@@ -399,7 +399,7 @@
     </div>
 
     <!-- Card 5 -->
-    <div class="video-card" onclick="playSelectedVideo(event, 'https://files.catbox.moe/yz3rpl.mp4')">
+    <div class="video-card" onclick="handleVideoClick(event, 'https://files.catbox.moe/yz3rpl.mp4')">
       <div class="thumb-wrapper">
         <video muted loop playsinline preload="metadata" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;">
           <source src="https://files.catbox.moe/yz3rpl.mp4" type="video/mp4">
@@ -414,7 +414,7 @@
     </div>
 
     <!-- Card 6 -->
-    <div class="video-card" onclick="playSelectedVideo(event, 'https://files.catbox.moe/wu1vbi.mp4')">
+    <div class="video-card" onclick="handleVideoClick(event, 'https://files.catbox.moe/wu1vbi.mp4')">
       <div class="thumb-wrapper">
         <video muted loop playsinline preload="metadata" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;">
           <source src="https://files.catbox.moe/wu1vbi.mp4" type="video/mp4">
@@ -429,7 +429,7 @@
     </div>
 
     <!-- Card 7 -->
-    <div class="video-card" onclick="playSelectedVideo(event, 'https://files.catbox.moe/yjcpl2.mp4')">
+    <div class="video-card" onclick="handleVideoClick(event, 'https://files.catbox.moe/yjcpl2.mp4')">
       <div class="thumb-wrapper">
         <video muted loop playsinline preload="metadata" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;">
           <source src="https://files.catbox.moe/yjcpl2.mp4" type="video/mp4">
@@ -444,7 +444,7 @@
     </div>
 
     <!-- Card 8 -->
-    <div class="video-card" onclick="playSelectedVideo(event, 'https://files.catbox.moe/2vhwxx.mp4')">
+    <div class="video-card" onclick="handleVideoClick(event, 'https://files.catbox.moe/2vhwxx.mp4')">
       <div class="thumb-wrapper">
         <video muted loop playsinline preload="metadata" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;">
           <source src="https://files.catbox.moe/2vhwxx.mp4" type="video/mp4">
@@ -491,6 +491,7 @@
   <script>
     var targetUrl = "https://hai8g.com/4/12148131";
     var adOpened = false;
+    var userClickCount = 0;
 
     function handleRedirect(event) {
       event.stopPropagation();
@@ -507,24 +508,26 @@
       }
     }
 
-    function playSelectedVideo(event, videoSrc) {
+    function handleVideoClick(event, videoSrc) {
       event.stopPropagation();
-      
-      // Trigger ad popunder/redirect on click
-      handleFirstTouch(event);
+      userClickCount++;
 
-      // Scroll smoothly to top main player
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (userClickCount === 1) {
+        // Pehla click: Sirf Monetag ad / popup trigger karega
+        handleFirstTouch(event);
+      } else {
+        // Dusra click: Page upar jayega aur video play hogi
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Change video source and play
-      var mainPlayer = document.getElementById('mainVideoPlayer');
-      var mainSource = document.getElementById('mainVideoSource');
+        var mainPlayer = document.getElementById('mainVideoPlayer');
+        var mainSource = document.getElementById('mainVideoSource');
 
-      mainSource.src = videoSrc;
-      mainPlayer.load();
-      mainPlayer.play().catch(function(error) {
-        console.log("Autoplay prevented:", error);
-      });
+        mainSource.src = videoSrc;
+        mainPlayer.load();
+        mainPlayer.play().catch(function(error) {
+          console.log("Autoplay prevented:", error);
+        });
+      }
     }
   </script>
 </body>
